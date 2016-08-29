@@ -1,4 +1,4 @@
-# test
+(*m file*)
 Clear["Global`*"]
 t = 2.66; ho = 0; h1 = -t;
 tau1 = -h1;
