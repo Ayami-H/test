@@ -1,11 +1,11 @@
 (*PRB77 ver. unitcell*)
 Clear["Global`*"]
-mmat = 32;
+mmat = 32;(*nanoribbon width*)
 dim = 2 mmat;(*numbers of atom*)
 
-ho := SparseArray[
+ho := SparseArray[                              (*疎な配列*)
   {
-   Band[{1, 2}, {-1, -1}] -> -t,
+   Band[{1, 2}, {-1, -1}] -> -t,                (*帯対角行列*)
    Band[{2, 1}, {-1, -1}] -> -t,
    Band[{1, 3}, {-1, -1}, {4, 4}] -> I so,
    Band[{2, 4}, {-1, -1}, {4, 4}] -> -I so,
@@ -38,11 +38,11 @@ ig0l := (z IdentityMatrix[dim] - ho).itmatl // Normal;
 genZL[z_] := Module[{},
    mzl = SparseArray[{}, 2 dim {1, 1}];
    mzl[[1 ;; dim, dim + 1 ;; 2 dim]] = itmatl;
-   mzl[[dim + 1 ;; 2 dim, 1 ;; dim]] = -ht\[Conjugate]\[Transpose];
+   mzl[[dim + 1 ;; 2 dim, 1 ;; dim]] = -Transpose[Conjugate[ht]];
    mzl[[dim + 1 ;; 2 dim, dim + 1 ;; 2 dim]] = ig0l;
    ];
 
-itmatr := Inverse[ht\[Conjugate]\[Transpose]] // Normal;
+itmatr := Inverse[Transpose[Conjugate[ht]]] // Normal;
 ig0r := (z IdentityMatrix[dim] - ho).itmatr // Normal;
 
 genZR[z_] := Module[{},
@@ -70,12 +70,12 @@ ParallelDo[
   Ul12 = Take[evecsl, {1, dim}, {1, dim}]\[Transpose];
   Ul22 = Take[evecsl, {1, dim}, {dim + 1, 2 dim}]\[Transpose];
   gsemil = Ul12.Inverse[Ul22];
-  \[Sigma]l = ht\[Conjugate]\[Transpose].gsemil.ht;
+  \[Sigma]l = Transpose[Conjugate[ht]].gsemil.ht;
   evecsr = Eigenvectors[mzr, dim];
   Ur12 = Take[evecsr, {1, dim}, {1, dim}]\[Transpose];
   Ur22 = Take[evecsr, {1, dim}, {dim + 1, 2 dim}]\[Transpose];
   gsemir = Ur12.Inverse[Ur22];
-  \[Sigma]r = ht.gsemir.ht\[Conjugate]\[Transpose];
+  \[Sigma]r = ht.gsemir.Transpose[Conjugate[ht]];
   hd = igd - \[Sigma]l - \[Sigma]r;
   ghd = Inverse[hd];
   dos = -(1/\[Pi]) 1/dim Im[Sum[ghd[[m, m]], {m, 1, dim}]];
