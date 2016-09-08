@@ -1,4 +1,4 @@
-(*PRB77 ver. unitcell*)
+(*PRB 77, 085408 (2008) 'Quantum conductance of graphene nanoribbons with edge defects' *)
 Clear["Global`*"]
 mmat = 32;(*nanoribbon width*)
 dim = 2 mmat;(*numbers of atom*)
